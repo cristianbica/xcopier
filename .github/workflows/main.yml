@@ -33,7 +33,7 @@ jobs:
       TEST_DATABASE_HOST: 127.0.0.1
       TEST_DATABASE_USERNAME: root
       TEST_DATABASE_PASSWORD: password
-      BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails }}
+      BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails }}.gemfile
       RAILS_ENV: test
 
     services:
