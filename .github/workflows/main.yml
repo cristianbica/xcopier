@@ -10,11 +10,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }}
+    name: Ruby ${{ matrix.ruby }} - DB ${{ matrix.db }}
     strategy:
       matrix:
         ruby:
           - '3.3.6'
+        db:
+          - sqlite3
+          - postgresql
+          - mysql2
 
     steps:
     - uses: actions/checkout@v4
@@ -28,3 +32,22 @@ jobs:
       env:
         LOG_LEVEL: debug
         MT_CPU: 1
+        TEST_DATABASE_ADAPTER: ${{ matrix.db }}
+        TEST_DATABASE_HOST: localhost
+        TEST_DATABASE_USER: root
+        TEST_DATABASE_PASSWORD: password
+
+    services:
+      postgres:
+        image: postgres:latest
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: root
+          POSTGRES_PASSWORD: password
+      mysql:
+        image: mysql:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: password
