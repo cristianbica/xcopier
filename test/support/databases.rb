@@ -23,7 +23,7 @@ module DatabasesMixin
   def build_database_url(name)
     case ENV.fetch("TEST_DATABASE_ADAPTER", "sqlite3")
     when "sqlite3"
-      "sqlite3://tmp/#{name}.sqlite3"
+      "sqlite3:tmp/#{name}.sqlite3"
     when "mysql2"
       URI::Generic.build(
         scheme: "mysql2",
