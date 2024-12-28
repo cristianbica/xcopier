@@ -9,7 +9,7 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     name: Rails ${{ matrix.rails }} - DB ${{ matrix.db }}
     strategy:
       fail-fast: false
@@ -61,4 +61,19 @@ jobs:
         bundler-cache: true
 
     - name: Run tests
-      run: bundle exec rake
+      run: bundle exec rake test
+
+  rubocop:
+    runs-on: ubuntu-24.04
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 3.3
+        bundler-cache: true
+
+    - name: Run RuboCop
+      run: bundle exec rubocop
