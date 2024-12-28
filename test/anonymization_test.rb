@@ -45,6 +45,5 @@ class AnonymizationTest < Minitest::Test
     assert_equal Time.new(2020, 1, 1), copied_user.last_login_at
     refute_equal user.locale, copied_user.locale
     assert_equal "en", copied_user.locale
-
   end
 end

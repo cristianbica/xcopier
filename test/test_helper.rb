@@ -8,3 +8,6 @@ require_relative "../test/dummy/config/environment"
 
 require "support/databases"
 require "support/logging"
+
+require "minitest/reporters"
+Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new

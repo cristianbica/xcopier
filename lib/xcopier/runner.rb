@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require "concurrent/promise"
 require_relative "actor"
 require_relative "reader"
 require_relative "transformer"
@@ -13,21 +12,20 @@ module Xcopier
 
     def self.run(copier)
       runner = spawn!(copier)
-      ret = runner.ask(:run).value.wait!
-      raise ret.value if ret.value.is_a?(Exception)
+      runner.tell(:run)
+      ret = runner.wait
+      raise ret if ret.is_a?(Exception)
 
-      ret.value
+      ret
     end
 
     def initialize(copier)
       @source_queue = Queue.new
       @destination_queue = Queue.new
-      @reader = Reader.spawn!(source_queue, copier)
-      @transformer = Transformer.spawn!(source_queue, destination_queue, copier)
-      @writer = Writer.spawn!(destination_queue, copier)
-      @promise = Concurrent::Promise.new
+      @reader = Reader.spawn!(source_queue, copier).tap { |actor| actor.parent = self }
+      @transformer = Transformer.spawn!(source_queue, destination_queue, copier).tap { |actor| actor.parent = self }
+      @writer = Writer.spawn!(destination_queue, copier).tap { |actor| actor.parent = self }
       @index = -1
-      Thread.current[:xactor] = :runner
       super
     end
 
@@ -36,28 +34,26 @@ module Xcopier
       in :run
         debug "Runner#message: type=run"
         process
-        promise
       in :done
         process
-      in [:terminated, reason]
-        debug "Runner#message: type=terminated reason=#{reason.inspect}"
       in [:error, e]
         debug "Runner#message: type=error error=#{e.message}"
         finish(e)
       else
         debug "Runner#message: type=unknown message=#{message.inspect}"
-        pass
+        raise UnknownMessageError, "Unknown message: #{message.inspect}"
       end
     end
 
-    def on_event(event)
-      debug "Runner#event: #{event.inspect}"
+    def on_error(error)
+      debug "Runner#error: #{error.message}"
+      finish(error)
     end
 
     def process
       self.index += 1
       if current_operation.nil?
-        finish
+        finish(true)
       else
         reader.tell([:read, current_operation])
         transformer.tell([:transform, current_operation])
@@ -67,25 +63,20 @@ module Xcopier
 
     def finish(message = nil)
       debug "Runner#finish: message=#{message.inspect}"
+      self.result = message
+
       source_queue.push(:done)
       destination_queue.push(:done)
-      reader.ask!(:stop)
-      reader.executor.shutdown
-      transformer.ask!(:stop)
-      transformer.executor.shutdown
-      writer.ask!(:stop)
-      writer.executor.shutdown
-      terminate!
-      promise.set(message)
+
+      reader.terminate!
+      transformer.terminate!
+      writer.terminate!
+      __queue.clear
+      __queue.push(:__terminate)
     end
 
     def current_operation
       copier.operations[index]
-    end
-
-    def stop
-      model.connection_pool.disconnect!
-      terminate!
     end
   end
 end

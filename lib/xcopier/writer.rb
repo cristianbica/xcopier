@@ -8,7 +8,6 @@ module Xcopier
 
     def initialize(queue, *rest)
       @queue = queue
-      Thread.current[:xactor] = :writer
       super(*rest)
     end
 
@@ -17,29 +16,22 @@ module Xcopier
       in [:write, Operation => operation]
         debug "Writer#message: type=write operation=#{operation.inspect}"
         process(operation)
-        true
-      in :stop
-        debug "Writer#message: type=stop"
-        terminate!
-        true
       else
         debug "Writer#message: type=unknown message=#{message.inspect}"
-        pass
+        raise UnknownMessageError, "Unknown message: #{message.inspect}"
       end
     end
 
-    def on_event(event)
-      debug "Writer#event: #{event.inspect}"
+    def on_error(error)
+      debug "Writer#error: #{error.message}"
+      parent.tell([:error, error])
     end
 
     def process(operation)
       setup(operation)
       work
+    ensure
       teardown
-    rescue Exception => e # rubocop:disable Lint/RescueException
-      debug "Writer#error: #{e.message}"
-      teardown
-      parent.tell([:error, e])
     end
 
     def work

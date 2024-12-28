@@ -36,8 +36,6 @@ Gem::Specification.new do |spec|
   # Uncomment to register a new dependency of your gem
   spec.add_dependency "activerecord"
   spec.add_dependency "activesupport"
-  spec.add_dependency "concurrent-ruby"
-  spec.add_dependency "concurrent-ruby-edge"
   spec.add_dependency "faker"
 
   # For more information and examples about making a new gem, check out our

@@ -18,3 +18,5 @@ gem "rubocop", "~> 1.21"
 gem "rubocop-minitest", "~> 0.36.0"
 
 gem "rubocop-rake", "~> 0.6.0"
+
+gem "minitest-reporters", "~> 1.7"

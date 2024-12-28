@@ -6,12 +6,13 @@ module DatabasesMixin
   def prepare_databases(*dbs)
     quite do
       dbs.each do |url_or_name|
-        puts "Preparing database: #{url_or_name}"
         config = ApplicationRecord.configurations.find_db_config(url_or_name)
         config ||= ActiveRecord::DatabaseConfigurations::UrlConfig.new("test", "primary", url_or_name)
         ActiveRecord::Tasks::DatabaseTasks.drop(config)
         ActiveRecord::Tasks::DatabaseTasks.create(config)
+        ActiveRecord::Base.establish_connection(config)
         ActiveRecord::Tasks::DatabaseTasks.load_schema(config)
+        ApplicationRecord.remove_connection
 
         @prepared_databases << config
       end

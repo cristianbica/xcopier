@@ -42,7 +42,7 @@ module Xcopier
     end
 
     def run
-      prepare
+      setup
       Runner.run(self)
     ensure
       teardown
@@ -50,7 +50,7 @@ module Xcopier
 
     private
 
-    def prepare
+    def setup
       ApplicationRecord.connects_to(
         shards: {
           xcopier: { reading: source, writing: destination }

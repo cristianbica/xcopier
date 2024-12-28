@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # config/initializers/active_record_logging.rb
 
 module ActiveRecord
@@ -5,7 +7,7 @@ module ActiveRecord
     def sql(event)
       config = event.payload[:connection].instance_variable_get(:@config)
       parts = [
-        "[A##{Thread.current[:xactor] || :main}]",
+        "[A##{Thread.current.name || :main}]",
         "[T##{Thread.current.object_id}]",
         "[C##{event.payload[:connection].object_id}]",
         "[#{config[:adapter].downcase}/#{config[:database].split("/").last}]"

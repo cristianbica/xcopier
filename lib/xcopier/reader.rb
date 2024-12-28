@@ -8,7 +8,6 @@ module Xcopier
 
     def initialize(queue, *rest)
       @queue = queue
-      Thread.current[:xactor] = :reader
       super(*rest)
     end
 
@@ -17,31 +16,25 @@ module Xcopier
       in [:read, Operation => operation]
         debug "Reader#message: type=read operation=#{operation.inspect}"
         process(operation)
-      in :stop
-        debug "Reader#message: type=stop"
-        terminate!
-        true
       else
         debug "Reader#message: type=unknown message=#{message.inspect}"
-        pass
+        raise UnknownMessageError, "Unknown message: #{message.inspect}"
       end
     end
 
-    def on_event(event)
-      debug "Reader#event: #{event.inspect}"
+    def on_error(error)
+      debug "Reader#error: #{error.message}"
+      parent.tell([:error, error])
     end
 
     def process(operation)
       setup(operation)
-      read
+      work
+    ensure
       teardown
-    rescue Exception => e # rubocop:disable Lint/RescueException
-      debug "Reader#error: #{e.message}"
-      teardown
-      parent.tell([:error, e])
     end
 
-    def read
+    def work
       each_chunk do |chunk|
         queue.push(chunk)
       end

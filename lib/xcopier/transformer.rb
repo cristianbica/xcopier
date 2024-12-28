@@ -5,12 +5,11 @@ require_relative "anonymizer"
 
 module Xcopier
   class Transformer < Actor
-    attr_reader :read_queue, :write_queue, :operation
+    attr_reader :input, :output, :operation
 
-    def initialize(read_queue, write_queue, *rest)
-      @read_queue = read_queue
-      @write_queue = write_queue
-      Thread.current[:xactor] = :transformer
+    def initialize(input, output, *rest)
+      @input = input
+      @output = output
       super(*rest)
     end
 
@@ -19,38 +18,34 @@ module Xcopier
       in [:transform, Operation => operation]
         debug "Transformer#message: type=transform operation=#{operation.inspect}"
         process(operation)
-      in :stop
-        debug "Transformer#message: type=stop"
-        terminate!
-        true
       else
         debug "Transformer#message: type=unknown message=#{message.inspect}"
-        pass
+        raise UnknownMessageError, "Unknown message: #{message.inspect}"
       end
     end
 
-    def on_event(event)
-      debug "Transformer#event: #{event.inspect}"
+    def on_error(error)
+      debug "Transformer#error: #{error.message}"
+      parent.tell([:error, error])
     end
 
     def process(operation)
-      @operation = operation
+      setup(operation)
       work
-    rescue Exception => e # rubocop:disable Lint/RescueException
-      debug "Transformer#error: #{e.message}"
-      parent.tell([:error, e])
+    ensure
+      teardown
     end
 
     def work
       loop do
-        chunk = read_queue.pop
+        chunk = input.pop
 
         if chunk == :done
-          write_queue.push(:done)
+          output.push(:done)
           @operation = nil
           break
         end
-        write_queue.push(transform(chunk))
+        output.push(transform(chunk))
       end
     end
 
@@ -66,6 +61,14 @@ module Xcopier
         value = apply_anonymization(value, key, record)
         hash[key] = value
       end
+    end
+
+    def setup(operation)
+      @operation = operation
+    end
+
+    def teardown
+      @operation = nil
     end
 
     private
