@@ -4,7 +4,6 @@ PATH
     xcopier (0.1.0)
       activerecord
       activesupport
-      faker
 
 GEM
   remote: https://rubygems.org/
@@ -230,6 +229,7 @@ PLATFORMS
   x86_64-linux
 
 DEPENDENCIES
+  faker (~> 3.5)
   minitest (~> 5.16)
   minitest-reporters (~> 1.7)
   rails (~> 8.0)

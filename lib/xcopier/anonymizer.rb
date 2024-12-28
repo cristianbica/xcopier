@@ -1,6 +1,9 @@
 # frozen_string_literal: true
 
-require "faker"
+begin
+  require "faker"
+rescue LoadError # rubocop:disable Lint/SuppressedException
+end
 
 module Xcopier
   module Anonymizer
@@ -20,6 +23,10 @@ module Xcopier
     }.freeze
 
     def anonymize(name, value)
+      unless defined?(Faker)
+        puts "[WARN] Please add the faker gem to your Gemfile to be able to automatic annonimize data"
+        return value
+      end
       RULES.each do |rule, block|
         return block.call if name.match?(rule)
       end
