@@ -8,7 +8,6 @@ namespace :dummy do
   Dummy::Application.load_tasks
 end
 
-
 Minitest::TestTask.create
 
 require "rubocop/rake_task"
