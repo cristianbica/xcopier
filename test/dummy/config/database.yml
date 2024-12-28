@@ -1,0 +1,16 @@
+test:
+  adapter: sqlite3
+  database: tmp/test.sqlite3
+
+development:
+  adapter: sqlite3
+  database: tmp/development.sqlite3
+
+sqlite1:
+  name: sqlite1
+  adapter: sqlite3
+  database: tmp/sqlite1.sqlite3
+
+sqlite2:
+  adapter: sqlite3
+  database: tmp/sqlite2.sqlite3
