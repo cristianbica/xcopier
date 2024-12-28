@@ -25,3 +25,6 @@ jobs:
         bundler-cache: true
     - name: Run the default task
       run: bundle exec rake
+      env:
+        LOG_LEVEL: debug
+        MT_CPU: 1
