@@ -39,7 +39,7 @@ jobs:
         MT_CPU: 1
         # RAILS_VERSION: ${{ matrix.rails }}
         TEST_DATABASE_ADAPTER: ${{ matrix.db }}
-        TEST_DATABASE_HOST: localhost
+        TEST_DATABASE_HOST: 127.0.0.1
         TEST_DATABASE_USERNAME: root
         TEST_DATABASE_PASSWORD: password
 
