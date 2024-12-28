@@ -11,8 +11,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Rails ${{ matrix.rails }} - DB ${{ matrix.db }}
-    continue-on-error: true
     strategy:
+      fail-fast: false
       matrix:
         ruby:
           - '3.3'
@@ -33,7 +33,7 @@ jobs:
       TEST_DATABASE_HOST: 127.0.0.1
       TEST_DATABASE_USERNAME: root
       TEST_DATABASE_PASSWORD: password
-      BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.gemfile }}
+      BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.rails }}
       RAILS_ENV: test
 
     services:
