@@ -236,7 +236,7 @@ DEPENDENCIES
   minitest-reporters (~> 1.7)
   mysql2 (~> 0.5.6)
   pg (~> 1.5)
-  rails (~> 8.0)
+  rails (~> 8.0.0)
   rake (~> 13.0)
   rubocop (~> 1.21)
   rubocop-minitest (~> 0.36.0)

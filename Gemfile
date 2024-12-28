@@ -11,7 +11,8 @@ gem "minitest", "~> 5.16"
 
 gem "minitest-reporters", "~> 1.7"
 
-gem "rails", "~> 8.0"
+rails_version = ENV.fetch("RAILS_VERSION", "8.0")
+gem "rails", "~> #{rails_version}.0"
 
 gem "sqlite3", "~> 2.4"
 

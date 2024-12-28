@@ -10,38 +10,30 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }} - DB ${{ matrix.db }}
+    name: Ruby ${{ matrix.ruby }} - Rails ${{ matrix.rails }} - DB ${{ matrix.db }}
+    continue-on-error: true
     strategy:
       matrix:
         ruby:
           - '3.3.6'
-        # rails:
-        #   - '7.0'
-        #   - '7.1'
-        #   - '7.2'
-        #   - '8.0'
+        rails:
+          - '7.0'
+          - '7.1'
+          - '7.2'
+          - '8.0'
         db:
           - sqlite3
           - postgresql
           - mysql2
 
-    steps:
-    - uses: actions/checkout@v4
-    - name: Set up Ruby
-      uses: ruby/setup-ruby@v1
-      with:
-        ruby-version: ${{ matrix.ruby }}
-        bundler-cache: true
-    - name: Run the default task
-      run: bundle exec rake
-      env:
-        LOG_LEVEL: debug
-        MT_CPU: 1
-        # RAILS_VERSION: ${{ matrix.rails }}
-        TEST_DATABASE_ADAPTER: ${{ matrix.db }}
-        TEST_DATABASE_HOST: 127.0.0.1
-        TEST_DATABASE_USERNAME: root
-        TEST_DATABASE_PASSWORD: password
+    env:
+      LOG_LEVEL: debug
+      MT_CPU: 1
+      RAILS_VERSION: ${{ matrix.rails }}
+      TEST_DATABASE_ADAPTER: ${{ matrix.db }}
+      TEST_DATABASE_HOST: 127.0.0.1
+      TEST_DATABASE_USERNAME: root
+      TEST_DATABASE_PASSWORD: password
 
     services:
       postgres:
@@ -57,3 +49,23 @@ jobs:
           - 3306:3306
         env:
           MYSQL_ROOT_PASSWORD: password
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: ${{ matrix.ruby }}
+
+    - name: Generate lockfile
+      run: bundle lock
+
+    - name: Cache dependencies
+      uses: actions/cache@v4
+      with:
+        path: vendor/bundle
+        key: bundle-${{ hashFiles('Gemfile.lock') }}
+
+    - name: Run the default task
+      run: bundle exec rake
