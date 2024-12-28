@@ -10,12 +10,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Ruby ${{ matrix.ruby }} - Rails ${{ matrix.rails }} - DB ${{ matrix.db }}
+    name: Rails ${{ matrix.rails }} - DB ${{ matrix.db }}
     continue-on-error: true
     strategy:
       matrix:
         ruby:
-          - '3.3.6'
+          - '3.3'
         rails:
           - '7.0'
           - '7.1'
@@ -29,11 +29,12 @@ jobs:
     env:
       LOG_LEVEL: debug
       MT_CPU: 1
-      RAILS_VERSION: ${{ matrix.rails }}
       TEST_DATABASE_ADAPTER: ${{ matrix.db }}
       TEST_DATABASE_HOST: 127.0.0.1
       TEST_DATABASE_USERNAME: root
       TEST_DATABASE_PASSWORD: password
+      BUNDLE_GEMFILE: gemfiles/rails_${{ matrix.gemfile }}
+      RAILS_ENV: test
 
     services:
       postgres:
@@ -57,18 +58,7 @@ jobs:
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: ${{ matrix.ruby }}
+        bundler-cache: true
 
-    - name: Generate lockfile
-      run: bundle lock
-
-    - name: Cache dependencies
-      uses: actions/cache@v4
-      with:
-        path: vendor/bundle
-        key: bundle-${{ hashFiles('Gemfile.lock') }}
-
-    - name: Setup
-      run: bin/setup
-
-    - name: Run the default task
+    - name: Run tests
       run: bundle exec rake

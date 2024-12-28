@@ -14,6 +14,7 @@ module Xcopier
     def on_message(message)
       case message
       in [:read, Operation => operation]
+        setup(operation)
         debug "Reader#message: type=read operation=#{operation.inspect}"
         process(operation)
       else
@@ -28,7 +29,6 @@ module Xcopier
     end
 
     def process(operation)
-      setup(operation)
       work
     ensure
       teardown

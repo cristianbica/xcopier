@@ -17,7 +17,7 @@ module Xcopier
     end
 
     def inspect
-      "#<#{self.class.name} name: #{name}, model: #{model.name}, scope: #{scope.to_sql}, chunk_size: #{chunk_size}, overrides: #{overrides.inspect}, anonymize: #{anonymize.inspect}>"
+      "#<#{self.class.name} name: #{name}, model: #{model.name}, chunk_size: #{chunk_size}, overrides: #{overrides.inspect}, anonymize: #{anonymize.inspect}>"
     end
 
     private

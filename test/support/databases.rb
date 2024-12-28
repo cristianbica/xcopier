@@ -16,7 +16,7 @@ module DatabasesMixin
 
         @prepared_databases << config
       end
-      ActiveRecord::Base.connection_handler.clear_all_connections!
+      clear_all_connections!
     end
   end
 
@@ -45,13 +45,13 @@ module DatabasesMixin
 
   def before_setup
     @prepared_databases = []
-    ActiveRecord::Base.connection_handler.clear_all_connections!
+    clear_all_connections!
     super
   end
 
   def after_teardown
     quite do
-      ActiveRecord::Base.connection_handler.clear_all_connections!
+      clear_all_connections!
       @prepared_databases&.each do |config|
         ActiveRecord::Tasks::DatabaseTasks.drop(config)
       rescue StandardError
@@ -62,6 +62,10 @@ module DatabasesMixin
   end
 
   private
+
+  def clear_all_connections!
+    ActiveRecord::Base.connection_handler.clear_all_connections!
+  end
 
   def quite
     old_stdout = $stdout
