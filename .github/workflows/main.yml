@@ -67,5 +67,8 @@ jobs:
         path: vendor/bundle
         key: bundle-${{ hashFiles('Gemfile.lock') }}
 
+    - name: Setup
+      run: bin/setup
+
     - name: Run the default task
       run: bundle exec rake
