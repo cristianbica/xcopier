@@ -45,7 +45,8 @@ module Xcopier
           @operation = nil
           break
         end
-        output.push(transform(chunk))
+        transformed = transform(chunk)
+        output.push(transformed)
       end
     end
 

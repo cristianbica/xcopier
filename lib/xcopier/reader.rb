@@ -44,7 +44,7 @@ module Xcopier
     def each_chunk
       ApplicationRecord.connected_to(shard: :xcopier, role: :reading) do
         operation.scope.in_batches(of: operation.chunk_size) do |relation|
-          yield operation.model.connection.execute(relation.to_sql).to_a
+          yield operation.model.connection.exec_query(relation.to_sql).to_a
         end
       end
     end

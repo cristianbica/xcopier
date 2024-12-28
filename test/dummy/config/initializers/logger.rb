@@ -10,7 +10,7 @@ module ActiveRecord
         "[A##{Thread.current.name || :main}]",
         "[T##{Thread.current.object_id}]",
         "[C##{event.payload[:connection].object_id}]",
-        "[#{config[:adapter].downcase}/#{config[:database].split("/").last}]"
+        "[#{config[:adapter].downcase}/#{config[:database].to_s.split("/").last}]"
       ]
       event.payload[:name] = "#{Time.current} -- #{parts.join(" ")} #{event.payload[:name]}"
     end

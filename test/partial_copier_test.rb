@@ -13,8 +13,8 @@ class PartialCopierTest < Minitest::Test
   end
 
   def test_copies_data
-    prepare_databases(:sqlite1, :sqlite2)
-    ApplicationRecord.establish_connection(:sqlite1)
+    prepare_databases(:db1, :db2)
+    ApplicationRecord.establish_connection(:db1)
 
     company1 = Company.create!(name: "Test Company 1")
     company1_users = 5.times.map { |i| User.create!(name: "User 1#{i}", company: company1) }
@@ -25,11 +25,11 @@ class PartialCopierTest < Minitest::Test
     ApplicationRecord.remove_connection
 
     copier = Copier.new(company_ids: [company1.id, company2.id].join(" , "))
-    copier.source = :sqlite1
-    copier.destination = :sqlite2
+    copier.source = :db1
+    copier.destination = :db2
     copier.run
 
-    ApplicationRecord.establish_connection(:sqlite2)
+    ApplicationRecord.establish_connection(:db2)
     assert_equal Company.all.ids.sort, [company1.id, company2.id].sort
     assert_equal User.all.ids.sort, (company1_users + company2_users).pluck(:id).sort
     assert_equal 2, User.where(name: ["User 10", "User 22"]).count

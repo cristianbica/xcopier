@@ -11,7 +11,7 @@ Xcopier is a tool to copy data from one database to another. It is designed to b
 Install the gem and add to the application's Gemfile by executing:
 
 ```bash
-bundle add xcopier
+bundle add xcopier --group=development
 ```
 
 ## Usage
@@ -31,7 +31,7 @@ class CompanyCopier
   argument :company_ids, :integer, list: true
 
   copy :companies, scope: -> { Company.where(id: arguments[:company_ids]) }
-  copy :users, scope: -> { User.where(company_id: arguments[:company_ids]) }, chunk_size: 4
+  copy :users, scope: -> { User.where(company_id: arguments[:company_ids]) }, chunk_size: 100
 end
 ```
 
