@@ -1,7 +1,7 @@
 PATH
   remote: ..
   specs:
-    xcopier (0.1.0)
+    xcopier (1.0.0)
       activerecord (>= 7.0)
       activesupport (>= 7.0)
 
