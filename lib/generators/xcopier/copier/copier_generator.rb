@@ -1,5 +1,7 @@
 # frozen_string_literal: true
 
+require "rails/generators"
+
 module Xcopier
   module Generators
     class CopierGenerator < ::Rails::Generators::NamedBase
