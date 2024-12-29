@@ -61,7 +61,7 @@ module Xcopier
     def transform_record(record)
       record.each_with_object({}) do |(key, value), hash|
         value = apply_overrides(value, key, record)
-        value = apply_anonymization(value, key, record)
+        value = apply_anonymization(value, key)
         hash[key] = value
       end
     end
@@ -85,7 +85,7 @@ module Xcopier
       new_value.call(*[value, record].first(new_value.arity))
     end
 
-    def apply_anonymization(value, key, record)
+    def apply_anonymization(value, key)
       return value if operation.overrides.key?(key)
       return Anonymizer.anonymize(key, value) if operation.anonymize == true
       return Anonymizer.anonymize(key, value) if operation.anonymize.is_a?(Array) && operation.anonymize.include?(key)
