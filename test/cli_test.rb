@@ -1,4 +1,6 @@
-require "minitest/autorun"
+# frozen_string_literal: true
+
+require "test_helper"
 require "xcopier/cli"
 
 class CLITest < Minitest::Test

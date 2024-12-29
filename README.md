@@ -1,6 +1,8 @@
 TODOs:
 - [ ] option to truncate the destination tables
 - [ ] do not fetch data if it will be overritten or anonymized
+- [ ] merge overrides and anonymizations
+- [ ] add a rails generator
 
 # Xcopier
 

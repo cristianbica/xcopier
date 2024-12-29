@@ -42,8 +42,8 @@ module DatabasesMixin
   def quite
     old_stdout = $stdout
     old_stderr = $stderr
-    # $stdout = StringIO.new
-    # $stderr = StringIO.new
+    $stdout = StringIO.new
+    $stderr = StringIO.new
     yield
   ensure
     $stdout = old_stdout
