@@ -1,6 +1,6 @@
 # Xcopier
 
-Xcopier is a tool to copy data from one database to another. It is designed to be used in a development environment to copy data from a production database to a local database (e.g. to test a data migration or data fix) allowing you to overide and/or anonymize the data.
+Xcopier is a tool to copy data from one database to another. It is designed to be used in a development environment to copy data from a production database to a local database (e.g., to test a data migration or data fix) allowing you to override and/or anonymize the data.
 
 :warning: :warning: :warning:
 
@@ -8,7 +8,7 @@ This is a "sharp knife" tool. It can be used to copy data from one database to a
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
+Install the gem and add it to the application's Gemfile by executing:
 
 ```bash
 bundle add xcopier --group=development
@@ -16,12 +16,12 @@ bundle add xcopier --group=development
 
 ## Usage
 
-Create a file (e.g. `app/libs/company_copier.rb`) and define a class that includes `Xcopier::DSL`.
+Create a file (e.g., `app/libs/company_copier.rb`) and define a class that includes `Xcopier::DSL`.
 
 You could also use the generator provided by this gem:
 
 ```bash
-bundle exec rails genereate xcopier:copier company
+bundle exec rails generate xcopier:copier company
 ```
 
 ```ruby
@@ -47,7 +47,7 @@ Then run the copier:
 bundle exec xcopier company --company-ids 1,2
 ```
 
-The above will load your app, instantiate the `CompanyCopier` class and run the `copy` method for the `companies` and `users` tables.
+The above will load your app, instantiate the `CompanyCopier` class, and run the `copy` method for the `companies` and `users` tables.
 
 You could also do this from a Rails console:
 
@@ -59,7 +59,7 @@ CompanyCopier.new(company_ids: "1,2").run
 
 ### Arguments
 
-The DSL includes an `argument` directive. It's purpose is to provide copier arguments to be used in queries to copy data. It supports typecasting for the following types: string, integer, time, date, boolean. You can also specify if the argument is a list by setting the `list` option to `true`.
+The DSL includes an `argument` directive. Its purpose is to provide copier arguments to be used in queries to copy data. It supports typecasting for the following types: string, integer, time, date, boolean. You can also specify if the argument is a list by setting the `list` option to `true`.
 
 Example:
 
@@ -72,8 +72,7 @@ argument :time, :time # it will parse the time using Time.parse
 argument :date, :date # it will parse the date using Date.parse
 argument :bool, :boolean # it will recognize as truthy the values: "1", "yes", "true", true
 
-copier.new(str: "string", str_list: "string1,string2", int: "1", int_list: "1,2", time: "2020-01-01 12:00", date: "2020-01-01
-", bool: "true")
+copier.new(str: "string", str_list: "string1,string2", int: "1", int_list: "1,2", time: "2020-01-01 12:00", date: "2020-01-01", bool: "true")
 
 copier.arguments[:str] # => "string"
 copier.arguments[:str_list] # => ["string1", "string2"]
@@ -87,7 +86,6 @@ copier.arguments[:bool] # => true
 Example:
 
 ```ruby
-
 copy :companies, anonymize: true
 
 copy :users,
@@ -130,7 +128,6 @@ The `copy` directive is to instruct the copier what to copy. It accepts the foll
   - anonymization is done in the [`Xcopier::Anonymizer`](https://github.com/cristianbica/xcopier/blob/master/lib/xcopier/anonymizer.rb) class, is based on the column name and uses the [faker](https://rubygems.org/gems/faker) gem
   - :warning: anonymization is not guaranteed to be secure and has currently a limited implementation
   - feel free to adjust it in your app (`Xcopier::Anonymizer::RULES` is a mutable hash where the key is a regex to match the column and the value is a lambda that returns the anonymized value) or contribute to this gem
-
 
 ## Development
 
