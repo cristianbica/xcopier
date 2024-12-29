@@ -6,17 +6,11 @@ module DatabasesMixin
   def prepare_databases(*dbs)
     quite do
       dbs.each do |url_or_name|
-        puts "Preparing database: #{url_or_name}"
         config = ApplicationRecord.configurations.find_db_config(url_or_name)
         config ||= ActiveRecord::DatabaseConfigurations::UrlConfig.new("test", "primary", url_or_name)
-        ActiveRecord::Tasks::DatabaseTasks.drop(config)
-        ActiveRecord::Tasks::DatabaseTasks.create(config)
-        ActiveRecord::Base.establish_connection(config)
-        ActiveRecord::Tasks::DatabaseTasks.load_schema(config)
-
-        @prepared_databases << config
+        puts "Preparing database: #{url_or_name} with config #{config.inspect}"
+        ActiveRecord::Tasks::DatabaseTasks.reconstruct_from_schema(config)
       end
-      clear_all_connections!
     end
   end
 
@@ -43,29 +37,7 @@ module DatabasesMixin
     end
   end
 
-  def before_setup
-    @prepared_databases = []
-    clear_all_connections!
-    super
-  end
-
-  def after_teardown
-    quite do
-      clear_all_connections!
-      @prepared_databases&.each do |config|
-        ActiveRecord::Tasks::DatabaseTasks.drop(config)
-      rescue StandardError
-        nil
-      end
-    end
-    super
-  end
-
   private
-
-  def clear_all_connections!
-    ActiveRecord::Base.connection_handler.clear_all_connections!
-  end
 
   def quite
     old_stdout = $stdout

@@ -41,10 +41,12 @@ module Xcopier
         chunk = input.pop
 
         if chunk == :done
+          debug "Transformer: done"
           output.push(:done)
           @operation = nil
           break
         end
+        debug "Transformer: transforming #{chunk.size} records"
         transformed = transform(chunk)
         output.push(transformed)
       end

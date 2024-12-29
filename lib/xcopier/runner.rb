@@ -71,8 +71,7 @@ module Xcopier
       reader.terminate!
       transformer.terminate!
       writer.terminate!
-      __queue.clear
-      __queue.push(:__terminate)
+      terminate!
     end
 
     def current_operation

@@ -59,9 +59,7 @@ module Xcopier
       @logger = Xcopier.logger
     end
 
-    def teardown
-      ApplicationRecord.remove_connection
-    end
+    def teardown; end
 
     def validate_arguments(args)
       given_arguments = args.keys

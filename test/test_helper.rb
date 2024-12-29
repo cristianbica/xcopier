@@ -11,3 +11,5 @@ require "support/logging"
 
 require "minitest/reporters"
 Minitest::Reporters.use! Minitest::Reporters::SpecReporter.new
+
+ApplicationRecord.establish_connection(:test)

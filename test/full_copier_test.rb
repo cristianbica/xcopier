@@ -18,7 +18,6 @@ class FullCopierTest < Minitest::Test
     company1_users = 5.times.map { |i| User.create!(name: "User 1#{i}", company: company1) }
     company2 = Company.create!(name: "Test Company 2")
     company2_users = 5.times.map { |i| User.create!(name: "User 2#{i}", company: company2) }
-    ApplicationRecord.remove_connection
 
     copier = Copier.new
     copier.source = :db1
@@ -42,7 +41,6 @@ class FullCopierTest < Minitest::Test
     company1_users = 5.times.map { |i| User.create!(name: "User 1#{i}", company: company1) }
     company2 = Company.create!(name: "Test Company 2")
     company2_users = 5.times.map { |i| User.create!(name: "User 2#{i}", company: company2) }
-    ApplicationRecord.remove_connection
 
     copier = Copier.new
     copier.source = build_database_url("db3")

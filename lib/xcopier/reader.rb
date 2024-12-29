@@ -37,7 +37,9 @@ module Xcopier
     def work
       each_chunk do |chunk|
         queue.push(chunk)
+        debug "Reader: read and pushed #{chunk.size} records"
       end
+      debug "Reader: done"
       queue.push(:done)
     end
 

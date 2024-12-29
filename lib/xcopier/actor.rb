@@ -54,7 +54,9 @@ module Xcopier
     end
 
     def terminate!
-      thread.kill
+      debug "#{self.class.name.demodulize}: terminating"
+      __queue.clear
+      __queue.push(:__terminate)
     end
 
     def on_error(error); end

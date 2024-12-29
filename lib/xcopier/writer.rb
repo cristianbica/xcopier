@@ -38,6 +38,7 @@ module Xcopier
       loop do
         chunk = queue.pop
         if chunk == :done
+          debug "Writer: done"
           @operation = nil
           parent.tell(:done)
           break
@@ -48,6 +49,7 @@ module Xcopier
 
     def write(records)
       ApplicationRecord.connected_to(shard: :xcopier, role: :writing) do
+        debug "Writer: writing #{records.size} records"
         operation.model.insert_all(records)
       end
     end

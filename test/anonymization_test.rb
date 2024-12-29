@@ -24,7 +24,6 @@ class AnonymizationTest < Minitest::Test
     ApplicationRecord.establish_connection(:db1)
     company = Company.create!(name: "Test Company 1")
     user = User.create!(company: company, name: "User One", email: "test@domain.com", password: "complicated", last_login_at: Time.new(2000, 1, 1), locale: "fr")
-    ApplicationRecord.remove_connection
 
     copier = Copier.new
     copier.source = :db1

@@ -22,7 +22,6 @@ class PartialCopierTest < Minitest::Test
     company2_users = 5.times.map { |i| User.create!(name: "User 2#{i}", company: company2) }
     company3 = Company.create!(name: "Test Company 3")
     5.times.map { |i| User.create!(name: "User 3#{i}", company: company3) }
-    ApplicationRecord.remove_connection
 
     copier = Copier.new(company_ids: [company1.id, company2.id].join(" , "))
     copier.source = :db1
