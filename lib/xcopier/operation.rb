@@ -6,13 +6,13 @@ module Xcopier
   class Operation
     attr_reader :name, :model, :scope, :chunk_size, :overrides, :anonymize
 
-    def initialize(copier, name:, model: nil, scope: nil, chunk_size: 500, overrides: {}, anonymize: {}) # rubocop:disable Metrics/ParameterLists
+    def initialize(copier, name:, model: nil, scope: nil, chunk_size: 500, overrides: {}, anonymize: []) # rubocop:disable Metrics/ParameterLists
       @name = name
       @model = model
       @scope = scope
       @chunk_size = chunk_size
       @overrides = overrides.is_a?(Hash) ? overrides.with_indifferent_access : overrides
-      @anonymize = anonymize.is_a?(Hash) ? anonymize.with_indifferent_access : anonymize
+      @anonymize = anonymize.is_a?(Array) ? anonymize.map(&:to_s) : anonymize
       prepare_model_and_scope(copier)
     end
 

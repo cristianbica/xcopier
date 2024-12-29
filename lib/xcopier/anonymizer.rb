@@ -9,7 +9,7 @@ module Xcopier
   module Anonymizer
     module_function
 
-    RULES = {
+    RULES = { # rubocop:disable Style/MutableConstant
       /email/ => -> { Faker::Internet.email },
       /first_?name/ => -> { Faker::Name.first_name },
       /last_?name/ => -> { Faker::Name.last_name },
@@ -20,7 +20,7 @@ module Xcopier
       /country/ => -> { Faker::Address.country },
       /zip/ => -> { Faker::Address.zip_code },
       /(company|organization)/ => -> { Faker::Company.name }
-    }.freeze
+    }
 
     def anonymize(name, value)
       unless defined?(Faker)

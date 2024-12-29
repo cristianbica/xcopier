@@ -86,14 +86,11 @@ module Xcopier
     end
 
     def apply_anonymization(value, key, record)
-      return Anonymizer.anonymize(key, value) if operation.anonymize == true || operation.anonymize[key] == true
+      return value if operation.overrides.key?(key)
+      return Anonymizer.anonymize(key, value) if operation.anonymize == true
+      return Anonymizer.anonymize(key, value) if operation.anonymize.is_a?(Array) && operation.anonymize.include?(key)
 
-      return value unless operation.anonymize.key?(key)
-
-      new_value = operation.anonymize[key]
-      return new_value unless new_value.respond_to?(:call)
-
-      new_value.call(*[value, record].first(new_value.arity))
+      value
     end
   end
 end
