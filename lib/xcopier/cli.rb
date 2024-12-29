@@ -30,7 +30,7 @@ module Xcopier
         opts.separator "\nCOPIER ARGUMENTS" if @options[:copier]&._arguments&.any?
         @options[:copier]&._arguments&.each do |arg|
           @options[:args][arg[:name]] = nil
-          banner = "--#{arg[:name].to_s.humanize.parameterize}"
+          banner = "--#{arg[:name].to_s.gsub("_", "-").parameterize}"
           banner += "=VALUE" if arg[:type] != :boolean
           help = "#{arg[:name]} copier argument"
           help << " (comma separated list)" if arg[:list]

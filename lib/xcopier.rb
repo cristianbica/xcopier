@@ -2,6 +2,8 @@
 
 require_relative "xcopier/version"
 require_relative "xcopier/dsl"
+require_relative "xcopier/railtie"
+
 require "active_support/core_ext/module/attribute_accessors"
 require "logger"
 

@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+<% module_namespacing do -%>
+class <%= class_name %>Copier
+  include Xcopier::DSL
+
+  argument :tenant_ids, type: :integer, list: true
+<% models.each do |model| -%>
+
+  copy :<%= model.table_name %>,
+       model: -> { <%= model.name %> },
+       scope: -> { <%= model.name %>.where(tenant_id: arguments[:tenant_ids]) },
+       overrides: {
+         # field: "value"
+         # field: -> { "value" }
+         # field: ->(value) { value.upcase }
+         # field: ->(value, attributes) { attributes[:other_field] == "value" ? "value" : value }
+       }
+<% end -%>
+end
+<% end -%>

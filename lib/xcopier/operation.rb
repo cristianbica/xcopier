@@ -24,6 +24,7 @@ module Xcopier
 
     def prepare_model_and_scope(copier)
       @model = name.to_s.classify.constantize if model.nil?
+      @model = model.call if model.is_a?(Proc)
       @scope = copier.instance_exec(&scope) if scope.is_a?(Proc)
       @scope = model.all if scope.nil?
     end
