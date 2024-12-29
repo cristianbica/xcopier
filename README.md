@@ -1,11 +1,10 @@
-TODOs:
-- [ ] option to truncate the destination tables
-- [ ] do not fetch data if it will be overritten or anonymized
-- [ ] merge overrides and anonymizations
-
 # Xcopier
 
-Xcopier is a tool to copy data from one database to another. It is designed to be used in a development environment to copy data from a production database to a local database for testing purposes allowing you to overide and/or anonymize the data.
+Xcopier is a tool to copy data from one database to another. It is designed to be used in a development environment to copy data from a production database to a local database (e.g. to test a data migration or data fix) allowing you to overide and/or anonymize the data.
+
+:warning: :warning: :warning:
+
+This is a "sharp knife" tool. It can be used to copy data from one database to another. Make sure you properly set the source and destination connections to avoid data loss or corruption.
 
 ## Installation
 
@@ -18,7 +17,12 @@ bundle add xcopier --group=development
 ## Usage
 
 Create a file (e.g. `app/libs/company_copier.rb`) and define a class that includes `Xcopier::DSL`.
-You could also use the generator provided by this gem (`bundle exec rails genereate xcopier:copier company`).
+
+You could also use the generator provided by this gem:
+
+```bash
+bundle exec rails genereate xcopier:copier company
+```
 
 ```ruby
 class CompanyCopier
