@@ -8,6 +8,7 @@ AllCops:
   SuggestExtensions: false
   Exclude:
     - gemfiles/*.gemfile
+    - "vendor/**/*"
 
 Style/StringLiterals:
   EnforcedStyle: double_quotes
