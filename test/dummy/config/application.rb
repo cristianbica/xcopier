@@ -22,5 +22,6 @@ module Dummy
   class Application < Rails::Application
     config.load_defaults Rails::VERSION::STRING.to_f
     config.active_record.maintain_test_schema = false
+    config.eager_load = false
   end
 end

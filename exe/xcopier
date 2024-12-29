@@ -1,4 +1,12 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require "xcopier"
+unless File.exist?("config/environment.rb")
+  warn "Expected to be ran from the root of a Rails project"
+  exit 1
+end
+
+require File.expand_path("config/environment")
+require "xcopier/cli"
+
+Xcopier::CLI.start(ARGV)
